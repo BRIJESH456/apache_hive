@@ -43,7 +43,7 @@ select /*+ MAPJOIN(order_items_partition_with_bucket) */ orders_partition_with_b
 from orders_partition_with_bucket o ,order_items_partition_with_bucket oi 
 where (o.data_dt = "2018-08-12" and oi.data_dt="2018-08-12") and o.order_id=oi.order_item_order_id;
 
-or
+--or
 
 select /*+ MAPJOIN(order_items_partition_with_bucket) */ orders_partition_with_bucket.* 
 from orders_partition_with_bucket o ,order_items_partition_with_bucket oi on(o.order_id=oi.order_item_order_id)
@@ -94,7 +94,7 @@ select /*+ MAPJOIN(order_items_partition_with_bucket) */ orders_partition_with_b
 from orders_partition_with_bucket o ,order_items_partition_with_bucket oi 
 where (o.data_dt = "2018-08-12" and oi.data_dt="2018-08-12") and o.order_id=oi.order_item_order_id;
 
-or
+--or
 
 select /*+ MAPJOIN(order_items_partition_with_bucket) */ orders_partition_with_bucket.* 
 from orders_partition_with_bucket o ,order_items_partition_with_bucket oi on(o.order_id=oi.order_item_order_id)
