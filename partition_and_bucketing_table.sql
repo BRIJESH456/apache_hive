@@ -100,7 +100,7 @@ select /*+ MAPJOIN(order_items_partition_with_bucket) */ orders_partition_with_b
 from orders_partition_with_bucket o ,order_items_partition_with_bucket oi on(o.order_id=oi.order_item_order_id)
 where o.data_dt = "2018-08-12" and oi.data_dt="2018-08-12";
 
---now check the time take to execute query for with or without sorted table.
+--now check the time taken to execute query for with or without sorted table.
 
 
 
