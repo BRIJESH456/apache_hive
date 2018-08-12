@@ -19,7 +19,7 @@ LOCATION '/user/big-data-practice/text/orders_partition_with_bucket';
 insert overwrite table orders_partition_with_bucket(data_dt="2018-08-12")
 select * from orders;
 
-select * from orders_partition_with_bucket TABLESAMPLE(BUCKET 1 OUT OF 5 ON data_dt);
+select * from orders_partition_with_bucket TABLESAMPLE(BUCKET 1 OUT OF 5 ON order_id);
 
 CREATE TABLE if not exists `order_items_partition_with_bucket` (
   `order_item_id` int,
@@ -38,7 +38,7 @@ LOCATION '/user/big-data-practice/text/order_items_partition_with_bucket';
 insert overwrite table order_items_partition_with_bucket(data_dt="2018-08-12")
 select * from order_items;
 
-select * from order_items_partition_with_bucket TABLESAMPLE(BUCKET 1 OUT OF 9 ON data_dt);
+select * from order_items_partition_with_bucket TABLESAMPLE(BUCKET 1 OUT OF 9 ON order_item_order_id);
 
 select /*+ MAPJOIN(order_items_partition_with_bucket) */ orders_partition_with_bucket.* 
 from orders_partition_with_bucket o ,order_items_partition_with_bucket oi 
@@ -71,7 +71,7 @@ LOCATION '/user/big-data-practice/text/orders_partition_with_bucket';
 insert overwrite table orders_partition_with_bucket(data_dt="2018-08-12")
 select * from orders;
 
-select * from orders_partition_with_bucket TABLESAMPLE(BUCKET 1 OUT OF 5 ON data_dt);
+select * from orders_partition_with_bucket TABLESAMPLE(BUCKET 1 OUT OF 5 ON order_id);
 
 CREATE TABLE if not exists `order_items_partition_with_bucket` (
   `order_item_id` int,
@@ -89,7 +89,7 @@ LOCATION '/user/big-data-practice/text/order_items_partition_with_bucket';
 insert overwrite table order_items_partition_with_bucket(data_dt="2018-08-12")
 select * from order_items;
 
-select * from order_items_partition_with_bucket TABLESAMPLE(BUCKET 1 OUT OF 9 ON data_dt);
+select * from order_items_partition_with_bucket TABLESAMPLE(BUCKET 1 OUT OF 9 ON order_item_order_id);
 
 select /*+ MAPJOIN(order_items_partition_with_bucket) */ orders_partition_with_bucket.* 
 from orders_partition_with_bucket o ,order_items_partition_with_bucket oi 
