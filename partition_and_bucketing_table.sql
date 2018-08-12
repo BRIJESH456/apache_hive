@@ -1,3 +1,4 @@
+--bucket properties
 set hive.enforce.bucketing=true;
 set hive.optimize.bucketmapjoin=true;
 
