@@ -1,1 +1,254 @@
+https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF
+SHOW FUNCTIONS;
+DESCRIBE FUNCTION <function_name>;
+DESCRIBE FUNCTION EXTENDED <function_name>;
+
+--Built-in Operators
+Operators Precedences
+-A, A IS [NOT] (NULL|TRUE|FALSE), A ^ B, A * B, A + B, A || B, A & B, A | B
+
+Relational Operators
+A = B, A == B, 
+A <=> B
+Note: 
+Returns same result with EQUAL(=) operator for non-null operands, but returns TRUE if both are NULL, FALSE if one of the them is NULL.,
+A <> B 
+Note :
+NULL if A or B is NULL, TRUE if expression A is NOT equal to expression B, otherwise FALSE.,
+A != B,
+A < B,
+A <= B,
+A > B,
+A >= B,
+A [NOT] BETWEEN B AND C,
+A IS NULL,
+A IS NOT NULL,
+A IS [NOT] (TRUE|FALSE),
+A [NOT] LIKE B,
+A RLIKE B,
+A REGEXP B
+
+Arithmetic Operators
+A + B, A - B,A * B, A / B, A DIV B, A % B, A & B, A | B, A ^ B, ~A
+
+Logical Operators
+A AND B, A OR B, NOT A, ! A, A IN (val1, val2, ...), A NOT IN (val1, val2, ...), [NOT] EXISTS (subquery)
+
+String Operators
+A || B
+
+Complex Type Constructors
+Operators on Complex Types
+A[n]
+M[key]
+S.x
+
+
+--Built-in Functions
+round(DOUBLE a), round(DOUBLE a, INT d), bround(DOUBLE a),bround(DOUBLE a, INT d)
+floor(DOUBLE a)
+ceil(DOUBLE a), ceiling(DOUBLE a)
+rand(), rand(INT seed)
+
+--Built-in Aggregate Functions (UDAF)
+count(*), count(expr), count(DISTINCT expr[, expr...])
+sum(col), sum(DISTINCT col)
+avg(col), avg(DISTINCT col)
+
+
+--Built-in Table-Generating Functions (UDTF)
+--GROUPing and SORTing on f(column)
+--UDF internals
+--Creating Custom UDFs
+
+
+https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DML
+--Hive Data Manipulation Language
+Loading files into tables
+Hive does not do any transformation while loading data into tables. Load operations 
+are currently pure copy/move operations that move datafiles into locations corresponding 
+to Hive tables.
+
+LOAD DATA [LOCAL] INPATH 'filepath' [OVERWRITE] INTO TABLE tablename [PARTITION (partcol1=val1, partcol2=val2 ...)]
+ 
+LOAD DATA [LOCAL] INPATH 'filepath' [OVERWRITE] INTO TABLE tablename [PARTITION (partcol1=val1, partcol2=val2 ...)] [INPUTFORMAT 'inputformat' SERDE 'serde'] (3.0 or later)
+
+example:
+
+CREATE TABLE tab1 (col1 int, col2 int) PARTITIONED BY (col3 int) STORED AS ORC;
+LOAD DATA LOCAL INPATH 'filepath' INTO TABLE tab1;
+
+--Inserting data into Hive Tables from queries
+*INSERT OVERWRITE will overwrite any existing data in the table or partition
+
+*INSERT INTO will append to the table or partition, keeping the existing data intact. 
+
+*In the dynamic partition inserts, users can give partial partition specifications, 
+which means just specifying the list of partition column names in the PARTITION clause. 
+The column values are optional. If a partition column value is given, we call this a 
+static partition, otherwise it is a dynamic partition. Each dynamic partition column 
+has a corresponding input column from the select statement. This means that the dynamic 
+partition creation is determined by the value of the input column. The dynamic partition 
+columns must be specified last among the columns in the SELECT statement and in the same 
+order in which they appear in the PARTITION() clause.
+
+*check for partition properties:
+
+set hive.exec.dynamic.partition;
+set hive.exec.dynamic.partition=true;
+set hive.exec.dynamic.partition.mode;
+set hive.exec.dynamic.partition.mode=nonstrict;
+set hive.exec.max.dynamic.partitions.pernode;
+set hive.exec.max.dynamic.partitions.pernode=100;
+set hive.exec.max.dynamic.partitions;
+set hive.exec.max.dynamic.partitions=1000;
+set hive.exec.max.created.files;
+set hive.exec.max.created.files=100000;
+set hive.error.on.empty.partition;
+set hive.error.on.empty.partition=false;
+
+
+Standard syntax:
+INSERT OVERWRITE TABLE tablename1 [PARTITION (partcol1=val1, partcol2=val2 ...) [IF NOT EXISTS]] select_statement1 FROM from_statement;
+INSERT INTO TABLE tablename1 [PARTITION (partcol1=val1, partcol2=val2 ...)] select_statement1 FROM from_statement;
+ 
+Hive extension (multiple inserts):
+FROM from_statement
+INSERT OVERWRITE TABLE tablename1 [PARTITION (partcol1=val1, partcol2=val2 ...) [IF NOT EXISTS]] select_statement1
+[INSERT OVERWRITE TABLE tablename2 [PARTITION ... [IF NOT EXISTS]] select_statement2]
+[INSERT INTO TABLE tablename2 [PARTITION ...] select_statement2] ...;
+FROM from_statement
+INSERT INTO TABLE tablename1 [PARTITION (partcol1=val1, partcol2=val2 ...)] select_statement1
+[INSERT INTO TABLE tablename2 [PARTITION ...] select_statement2]
+[INSERT OVERWRITE TABLE tablename2 [PARTITION ... [IF NOT EXISTS]] select_statement2] ...;
+ 
+Hive extension (dynamic partition inserts):
+INSERT OVERWRITE TABLE tablename PARTITION (partcol1[=val1], partcol2[=val2] ...) select_statement FROM from_statement;
+INSERT INTO TABLE tablename PARTITION (partcol1[=val1], partcol2[=val2] ...) select_statement FROM from_statement;
+
+--Writing data into the filesystem from queries
+Standard syntax:
+INSERT OVERWRITE [LOCAL] DIRECTORY directory1
+  [ROW FORMAT row_format] [STORED AS file_format] (Note: Only available starting with Hive 0.11.0)
+  SELECT ... FROM ...
+ 
+Hive extension (multiple inserts):
+FROM from_statement
+INSERT OVERWRITE [LOCAL] DIRECTORY directory1 select_statement1
+[INSERT OVERWRITE [LOCAL] DIRECTORY directory2 select_statement2] ...
+ 
+  
+row_format
+  : DELIMITED [FIELDS TERMINATED BY char [ESCAPED BY char]] [COLLECTION ITEMS TERMINATED BY char]
+        [MAP KEYS TERMINATED BY char] [LINES TERMINATED BY char]
+        [NULL DEFINED AS char] (Note: Only available starting with Hive 0.13)
+
+--Inserting values into tables from SQL
+Standard Syntax:
+INSERT INTO TABLE tablename [PARTITION (partcol1[=val1], partcol2[=val2] ...)] VALUES values_row [, values_row ...]
+  
+Where values_row is:
+( value [, value ...] )
+where a value is either null or any valid SQL literal
+
+
+--Update(0.14 onwards)
+Standard Syntax:
+UPDATE tablename SET column = value [, column = value ...] [WHERE expression]
+
+--Delete(0.14 onwards)
+Standard Syntax:
+DELETE FROM tablename [WHERE expression]
+--Merge(2.2 onwards)
+Standard Syntax:
+MERGE INTO <target table> AS T USING <source expression/table> AS S
+ON <boolean expression1>
+WHEN MATCHED [AND <boolean expression2>] THEN UPDATE SET <set clause list>
+WHEN MATCHED [AND <boolean expression3>] THEN DELETE
+WHEN NOT MATCHED [AND <boolean expression4>] THEN INSERT VALUES<value list>
+
+https://cwiki.apache.org/confluence/display/Hive/LanguageManual+ImportExport
+
+The EXPORT command exports the data of a table or partition, along with the metadata, into a specified output location. This output location can then be moved over to a different Hadoop or Hive instance and imported from there with the IMPORT command.
+
+When exporting a partitioned table, the original data may be located in different HDFS locations. The ability to export/import a subset of the partition is also supported.
+
+Exported metadata is stored in the target directory, and data files are stored in subdirectories.
+
+The EXPORT and IMPORT commands work independently of the source and target metastore DBMS used; for example, they can be used between Derby and MySQL databases.
+
+IMPORT will create target table/partition if it does not exist.  All the table 
+properties/parameters will be that of table that was used in EXPORT to generate 
+the archive.  If target exists, checks are performed that it has appropriate schema, 
+Input/OutputFormat, etc.  If target table exists and is not partitioned, it must be empty.
+If target table exists and is partitioned, partitions being imported must not exist in 
+the table.  
+
+Export Syntax:
+EXPORT TABLE tablename [PARTITION (part_column="value"[, ...])]
+  TO 'export_target_path' [ FOR replication('eventid') ]
+
+Import Syntax:  
+IMPORT [[EXTERNAL] TABLE new_or_original_tablename [PARTITION (part_column="value"[, ...])]]
+  FROM 'source_path'
+  [LOCATION 'import_target_path']
+  
+Simple export and import:
+export table department to 'hdfs_exports_location/department';
+import from 'hdfs_exports_location/department';
+
+Rename table on import:
+export table department to 'hdfs_exports_location/department';
+import table imported_dept from 'hdfs_exports_location/department';
+
+Export partition and import:
+export table employee partition (emp_country="in", emp_state="ka") to 'hdfs_exports_location/employee';
+import from 'hdfs_exports_location/employee';
+
+Export table and import partition:
+export table employee to 'hdfs_exports_location/employee';
+import table employee partition (emp_country="us", emp_state="tn") from 'hdfs_exports_location/employee';
+
+Specify the import location:
+export table department to 'hdfs_exports_location/department';
+import table department from 'hdfs_exports_location/department' 
+       location 'import_target_location/department';
+
+Import as an external table:
+export table department to 'hdfs_exports_location/department';
+import external table department from 'hdfs_exports_location/department';
+
+https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Explain
+Hive provides an EXPLAIN command that shows the execution plan for a query. 
+The syntax for this statement is as follows:	   
+
+EXPLAIN Syntax:
+EXPLAIN [EXTENDED|DEPENDENCY|AUTHORIZATION|LOCKS|VECTORIZATION] query
+
+create table sample(
+test_tinyint tinyint,
+test_smallint smallint,
+test_int int,
+test_bigint bigint,
+test_float float,
+test_double double,
+test_decimal decimal
+test_timestamp timestamp,
+test_date date,
+test_string string,
+test_boolean boolean,
+test_array array<string>,
+test_map map<int,string>,
+test_struct struct<sample_int:int, sample_string: string,sample_float:float>
+)
+ROW FORMAT delimited
+FIELDS TERMINATED BY ','
+MAP KEYS TERMINATED BY '#'
+COLLECTION ITEMS TERMINATED BY '$'
+NULL DEFINED AS '0';
+
+127,32767,2147483647,9223372036854775807,4.0,4.0,4.54,2018-08-13 06:33:02,2018-08-13,this is sample lime.,true,a$b$c,pf#500$epf#200,1$testing$45.45
+
+1,abc,40000,a$b$c,pf#500$epf#200,pune$ap$500001
+
 
