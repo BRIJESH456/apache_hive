@@ -1,0 +1,55 @@
+explain create table sample(
+test_tinyint tinyint,
+test_smallint smallint,
+test_int int,
+test_bigint bigint,
+test_float float,
+test_double double,
+test_decimal decimal,
+test_timestamp timestamp,
+test_date date,
+test_string string,
+test_boolean boolean,
+test_array array<string>,
+test_map map<string,int>,
+test_struct struct<sample_int:int, sample_string: string,sample_float:float>
+)
+ROW FORMAT delimited
+FIELDS TERMINATED BY ','
+COLLECTION ITEMS TERMINATED BY '$'
+MAP KEYS TERMINATED BY '#';
+
+create table sample(
+test_tinyint tinyint,
+test_smallint smallint,
+test_int int,
+test_bigint bigint,
+test_float float,
+test_double double,
+test_decimal decimal,
+test_timestamp timestamp,
+test_date date,
+test_string string,
+test_boolean boolean,
+test_array array<string>,
+test_map map<string,int>,
+test_struct struct<sample_int:int, sample_string: string,sample_float:float>
+)
+ROW FORMAT delimited
+FIELDS TERMINATED BY ','
+COLLECTION ITEMS TERMINATED BY '$'
+MAP KEYS TERMINATED BY '#';
+
+--sample data
+
+127,32767,2147483647,9223372036854775807,4.0,4.0,4.54,2018-08-13 06:33:02,2018-08-13,this is sample lime.,true,a$b$c,pf#500$epf#200,1$testing$45.45
+
+--load data into sample
+load data local INPATH '/home/cloudera/data/sample.txt' overwrite into table sample;
+
+--retriving data
+select 
+test_map['pf'],
+test_array[1],
+test_struct.sample_float 
+from sample;
