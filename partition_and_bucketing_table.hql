@@ -121,45 +121,6 @@ Storage Desc Params:
 	serialization.format	,                   
 Time taken: 0.115 seconds, Fetched: 38 row(s)
 
-hive> describe formatted orders_partition_with_bucket_without_sorted;
-OK
-# col_name            	data_type           	comment             
-	 	 
-order_id            	int                 	                    
-order_date          	string              	                    
-order_customer_id   	int                 	                    
-order_status        	string              	                    
-	 	 
-# Partition Information	 	 
-# col_name            	data_type           	comment             
-	 	 
-data_dt             	string              	                    
-	 	 
-# Detailed Table Information	 	 
-Database:           	retail_db           	 
-Owner:              	cloudera            	 
-CreateTime:         	Mon Aug 13 11:30:26 PDT 2018	 
-LastAccessTime:     	UNKNOWN             	 
-Protect Mode:       	None                	 
-Retention:          	0                   	 
-Location:           	hdfs://quickstart.cloudera:8020/user/big-data-practice/text/orders_partition_with_bucket_without_sorted	 
-Table Type:         	MANAGED_TABLE       	 
-Table Parameters:	 	 
-	transient_lastDdlTime	1534185026          
-	 	 
-# Storage Information	 	 
-SerDe Library:      	org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe	 
-InputFormat:        	org.apache.hadoop.mapred.TextInputFormat	 
-OutputFormat:       	org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat	 
-Compressed:         	No                  	 
-Num Buckets:        	5                   	 
-Bucket Columns:     	[order_id]          	 
-Sort Columns:       	[]                  	 
-Storage Desc Params:	 	 
-	field.delim         	,                   
-	serialization.format	,                   
-Time taken: 0.107 seconds, Fetched: 35 row(s)
-
 
 select * from orders_partition_with_bucket_with_sorted TABLESAMPLE(BUCKET 1 OUT OF 5 ON order_id);
 select * from order_items_partition_with_bucket_with_sorted TABLESAMPLE(BUCKET 1 OUT OF 9 ON order_item_order_id);
@@ -278,7 +239,8 @@ LOCATION '/user/big-data-practice/text/order_items_partition_with_bucket_without
 insert overwrite table order_items_partition_with_bucket_without_sorted partition(data_dt="2018-08-12")
 select * from order_items;
 
-describe formatted orders_partition_with_bucket_without_sorted;
+hive> describe formatted orders_partition_with_bucket_without_sorted;
+OK
 # col_name            	data_type           	comment             
 	 	 
 order_id            	int                 	                    
@@ -314,12 +276,11 @@ Sort Columns:       	[]
 Storage Desc Params:	 	 
 	field.delim         	,                   
 	serialization.format	,                   
-Time taken: 0.322 seconds, Fetched: 35 row(s)
+Time taken: 0.107 seconds, Fetched: 35 row(s)
 
 
-
---select * from orders_partition_with_bucket_without_sorted TABLESAMPLE(BUCKET 1 OUT OF 5 ON order_id);
---select * from order_items_partition_with_bucket_without_sorted TABLESAMPLE(BUCKET 1 OUT OF 9 ON order_item_order_id);
+select * from orders_partition_with_bucket_without_sorted TABLESAMPLE(BUCKET 1 OUT OF 5 ON order_id);
+select * from order_items_partition_with_bucket_without_sorted TABLESAMPLE(BUCKET 1 OUT OF 9 ON order_item_order_id);
 
 select /*+ MAPJOIN(oi) */ o.* 
 from orders_partition_with_bucket_without_sorted  o ,order_items_partition_with_bucket_without_sorted oi 
