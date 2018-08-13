@@ -251,4 +251,29 @@ NULL DEFINED AS '0';
 
 1,abc,40000,a$b$c,pf#500$epf#200,pune$ap$500001
 
+https://cwiki.apache.org/confluence/display/Hive/StatsDev
 
+ANALYZE TABLE [db_name.]tablename [PARTITION(partcol1[=val1], partcol2[=val2], ...)]  -- (Note: Fully support qualified table name since Hive 1.2.0, see HIVE-10007.)
+  COMPUTE STATISTICS 
+  [FOR COLUMNS]          -- (Note: Hive 0.10.0 and later.)
+  [CACHE METADATA]       -- (Note: Hive 2.1.0 and later.)
+  [NOSCAN];
+  
+Suppose table Table1 has 4 partitions with the following specs:
+
+Partition1: (ds='2008-04-08', hr=11)
+Partition2: (ds='2008-04-08', hr=12)
+Partition3: (ds='2008-04-09', hr=11)
+Partition4: (ds='2008-04-09', hr=12)
+
+ANALYZE TABLE Table1 PARTITION(ds='2008-04-09', hr=11) COMPUTE STATISTICS;
+ANALYZE TABLE Table1 PARTITION(ds='2008-04-09', hr=11) COMPUTE STATISTICS FOR COLUMNS;
+ANALYZE TABLE Table1 PARTITION(ds='2008-04-09', hr) COMPUTE STATISTICS;
+ANALYZE TABLE Table1 PARTITION(ds='2008-04-09', hr) COMPUTE STATISTICS FOR COLUMNS;
+ANALYZE TABLE Table1 PARTITION(ds, hr) COMPUTE STATISTICS;
+ANALYZE TABLE Table1 PARTITION(ds, hr) COMPUTE STATISTICS FOR COLUMNS;
+ANALYZE TABLE Table1 COMPUTE STATISTICS;
+ANALYZE TABLE Table1 COMPUTE STATISTICS FOR COLUMNS;
+
+
+https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Indexing
