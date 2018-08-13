@@ -277,3 +277,37 @@ ANALYZE TABLE Table1 COMPUTE STATISTICS FOR COLUMNS;
 
 
 https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Indexing
+*********************************************************************************************
+***********************Hadoop-The Definitive Guide*******************************************
+*********************************************************************************************
+hive -e 'SELECT * FROM dummy'
+hive -f hive_script.hql
+hive -S -e 'SELECT * FROM dummy'
+
+SET hive.execution.engine=tez;
+
+--Hive Services
+cli
+hiveserver2
+beeline
+hwi(hive web interface)
+jar
+metastore
+
+--Hive clients
+Thrift Client
+JDBC driver
+ODBC driver
+
+--Schema on Read Versus Schema on Write
+--Managed Tables and External Tables
+--Partitions and Buckets
+--Multitable insert
+--
+CREATE FUNCTION strip AS 'com.hadoopbook.hive.Strip'
+USING JAR '/path/to/hive-examples.jar';
+DROP FUNCTION strip;
+
+ADD JAR /path/to/hive-examples.jar;
+CREATE TEMPORARY FUNCTION strip AS 'com.hadoopbook.hive.Strip';
+
