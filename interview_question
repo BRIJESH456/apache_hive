@@ -1,0 +1,135 @@
+--hive
+Q.What are the types of tables in Hive?
+Ans:
+
+Q. Can We Change settings within Hive Session? If Yes, How?
+Ans: yes, by using set command.
+hive.enforce.bucketing=true;
+
+Q. How to add column in hive table.
+
+ALTER TABLE default.test_table ADD columns (new_column_name string);
+ALTER TABLE table_name CHANGE new_column_name FIRST|AFTER column_name;
+
+Q. What are the components used in Hive query processor?
+Ans: 
+Logical Plan of Generation.
+Physical Plan of Generation.
+Execution Engine.
+Operators.
+UDF’s and UDAF’s.
+Optimizer.
+Parser.
+Semantic Analyzer.
+Type Checking
+
+Q. What is Buckets in Hive?
+Q. What is partitions in Hive?
+Ans:
+Hive organizes tables into partitions for grouping similar type of data together based on a column or partition key. Each Table can have one or more partition keys to identify a particular partition. Physically, a partition is nothing but a sub-directory in the table directory.
+
+Q. What is dynamic partitioning and when is it used?
+In dynamic partitioning values for partition columns are known in the runtime.
+SET hive.exec.dynamic.partition = true;
+SET hive.exec.dynamic.partition.mode = nonstrict;
+
+Q. How to skip header rows from a table in Hive?
+set skip.header.line.count=1;
+or
+TBLPROPERTIES("skip.header.line.count"="2”);
+
+Q. If you run a select * query in Hive, Why does it not run MapReduce?
+
+<property>
+  <name>hive.fetch.task.conversion</name>
+  <value>minimal</value>
+</property>
+
+Q. How can we access the sub directories recursively?
+Ans: 
+Set mapred.input.dir.recursive=true;
+Set hive.mapred.supports.subdirectories=true;
+
+Q. Where does the data of a Hive table gets stored?
+Ans:
+se hive.metastore.warehouse.dir;
+
+Q. Why Hive does not store metadata information in HDFS?
+Ans: to achieve low latency as HDFS read/write operations are time consuming processes.
+
+Q. Is it possible to change the default location of a managed table? 
+Q. What is indexing and why do we need it?
+One of the Hive query optimization methods is Hive index. Hive index is used to speed up the access of a column or set of columns in a Hive database because with the use of index the database system does not need to read all rows in the table to find the data that one has selected.
+
+Q. How will you read and write HDFS files in Hive?
+i) TextInputFormat- This class is used to read data in plain text file format.
+ii) HiveIgnoreKeyTextOutputFormat- This class is used to write data in plain text file format.
+iii) SequenceFileInputFormat- This class is used to read data in hadoop SequenceFile format.
+iv) SequenceFileOutputFormat- This class is used to write data in hadoop SequenceFile format.
+
+Q. Explain about SORT BY, ORDER BY, DISTRIBUTE BY and CLUSTER BY in Hive.
+
+SORT BY – Data is ordered at each of ‘N’ reducers where the reducers can have overlapping range of data.
+
+ORDER BY- This is similar to the ORDER BY in SQL where total ordering of data takes place by passing it to a single reducer.
+
+DISTRUBUTE BY – It is used to distribute the rows among the reducers. Rows that have the same distribute by columns will go to the same reducer.
+
+CLUSTER BY- It is a combination of DISTRIBUTE BY and SORT BY where each of the N reducers gets non overlapping range of data which is then sorted by those ranges at the respective reducers.
+
+Q. How can you prevent a large job from running for a long time?
+hive.mapred.mode=strict;
+
+Q. Are multiline comments supported in Hive?
+No
+
+Q. What are the Binary Storage formats supported in Hive?
+
+Answer: By default Hive supports text file format, however hive also supports below binary formats.
+
+Sequence Files, Avro Data files, RCFiles, ORC files, Parquet files
+
+Sequence files: General binary format. splittable, compressible and row oriented. a typical example can be. if we have lots of small file, we may use sequence file as a container, where file name can be a key and content could stored as value. it support compression which enables huge gain in performance.
+
+Avro datafiles: Same as Sequence file splittable, compressible and row oriented except support of schema evolution and multilingual binding support.
+
+RCFiles: Record columnar file, it’s a column oriented storage file. it breaks table in row split. in each split stores that value of first row in first column and followed sub subsequently.
+
+Q. How can you transfer data from Hive to HDFS?
+insert overwrite directory '/' select * from tablename;
+
+--yarn
+
+--hadoop
+
+--mapreduce
+
+mapper --> combiner --> partitioner --> reducer
+
+--pig
+Q. Name the scalar data type and complex data types in Pig.
+Ans:
+The scalar data types in pig are int, float, double, long, chararray, and bytearray.
+The complex data types in Pig are map, tuple, and bag.
+
+--sqoop
+
+--spark
+
+--unix 
+
+--sql
+Q. how to find nth highest salary?
+
+select
+id,
+name,
+sal,
+DENSE_RANK() over (order by sal) as [DENSE_RANK],
+RANK() over (order by sal) as [RANK()],
+ROW_NUMBER() over (order by sal) as [ROW_NUMBER()]
+from employee
+
+select id, name, sal,denseRank from (
+select id, name, sal, dense_rank() over (order by sal) as denseRank)
+where denseRank = &n
