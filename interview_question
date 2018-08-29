@@ -133,6 +133,16 @@ grep -A 3 -i
 grep -B 2 
 grep -c
 grep -n
+grep –color
+grep -v
+grep -r 
+
+
+sed  -i '1i id name dept' test.txt
+sed -i 's/ABC/XXX/g'
+:%s/ABC/XXX/g #using vi editor
+
+
 
 --sql
 Q. how to find nth highest salary?
