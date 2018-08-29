@@ -26,7 +26,9 @@ Type Checking
 Q. What is Buckets in Hive?
 Q. What is partitions in Hive?
 Ans:
-Hive organizes tables into partitions for grouping similar type of data together based on a column or partition key. Each Table can have one or more partition keys to identify a particular partition. Physically, a partition is nothing but a sub-directory in the table directory.
+Hive organizes tables into partitions for grouping similar type of data together based on a column or partition key. 
+Each Table can have one or more partition keys to identify a particular partition. 
+Physically, a partition is nothing but a sub-directory in the table directory.
 
 Q. What is dynamic partitioning and when is it used?
 In dynamic partitioning values for partition columns are known in the runtime.
