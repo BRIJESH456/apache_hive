@@ -98,6 +98,11 @@ RCFiles: Record columnar file, it’s a column oriented storage file. it breaks 
 Q. How can you transfer data from Hive to HDFS?
 insert overwrite directory '/' select * from tablename;
 
+Q. How to compress data in hive?
+set hive.exec.compress.output=true;
+set mapred.output.compression=true;
+set mapred.output.compression.codec=org.apache.hadoop.io.compress.SnappyCodec; -- any other codec we can we use.
+
 --yarn
 
 --hadoop
@@ -115,8 +120,19 @@ The complex data types in Pig are map, tuple, and bag.
 --sqoop
 
 --spark
+Q. What is a Sparse Vector?
+
+A sparse vector has two parallel arrays –one for indices and the other for values. 
+These vectors are used for storing non-zero entries to save space.
 
 --unix 
+
+grep -i 
+grep -iw
+grep -A 3 -i
+grep -B 2 
+grep -c
+grep -n
 
 --sql
 Q. how to find nth highest salary?
