@@ -142,7 +142,23 @@ sed  -i '1i id name dept' test.txt
 sed -i 's/ABC/XXX/g'
 :%s/ABC/XXX/g #using vi editor
 
+Q. what is difference du an df/
+du: It walks through directory tree and counts the sum size of all files therein. How much disk space is being used by these files?
+df: Looks at disk used blocks directly in file system metadata. How much free disk space do I have?
 
+Q. How will you run a process in background? How will you bring that into foreground and how will you kill that process?
+&
+fg jobid
+
+
+find . -type f -name  test.txt -perm 0777 -print -exec chmod 644 {} \;
+find /home -iname
+find . -type f -name "test.txt" -exec rm -f {} \;
+find /tmp -type f -empty
+find /home -user tecmint
+find /home -group developer
+find / -mtime +50 –mtime -100
+find / -size +50M -size -100M
 
 --sql
 Q. how to find nth highest salary?
